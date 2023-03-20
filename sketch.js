@@ -1,30 +1,37 @@
-let Player, floor; 
+let = PlayerX = 30;
+let = PlayerY = 30;	
+let = TAcc = 0.5;
+let = TAccM = 0.2;
+let = RGBJ = (0, 255, 0);
 
-function setup() {
-	createCanvas(980, 540);
-	world.gravity.y = 10;
+function setup(){
+createCanvas(innerWidth, innerHeight);
 
-	floor = new Sprite();
-	floor.y = 512;
-	floor.x = 100;
-	floor.width = floor.y;
-	floor.height = 5;
-	floor.collider = 'static';
 
-	Player = new Sprite();
-	Player.width = 50;
-	Player.height = 50;
-	Player.y = 256;
-	Player.x = 100;
+	
 }
 
-function draw() {
-	if (keyCode === LEFT_ARROW) {
-		Player.x -= 10;
+function draw(){
+	background(100);
+
+	fill(51);
+	rect(0, 700, innerWidth, 200);
+	
+	rect(PlayerX, PlayerY, 50, 80);
+	
+	if (keyIsDown(LEFT_ARROW)){
+		PlayerX -= 2;
 	}
-	if (keyCode === RIGHT_ARROW) {
-		Player.x += 10;
+	if (keyIsDown(RIGHT_ARROW)){
+		PlayerX += 2;
+	}
+	//Tyngekraft
+	PlayerY += TAcc;
+	TAcc += TAccM;
+
+	if (PlayerY > 700){
+		PlayerY == 700;
+		TAcc == 0;
 	}
 
-	clear();
 }
