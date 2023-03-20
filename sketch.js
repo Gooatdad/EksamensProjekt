@@ -1,22 +1,27 @@
-let ball, floor;
+let Player, floor; 
+let PY = 256;
+let PX = 100;
 
 function setup() {
-	createCanvas(1960, 1080);
+	createCanvas(980, 540);
 	world.gravity.y = 10;
 
-	ball = new Sprite();
-	ball.diameter = 50;
-	ball.y = 30;
-  ball.x = 100;
-
 	floor = new Sprite();
-	floor.y = 190;
-	floor.w = 1960;
+	floor.y = 512;
+	floor.x = 100;
+	floor.w = floor.y;
 	floor.h = 5;
 	floor.collider = 'static';
-  floor.rotation = 2;
+
+	Player = new Sprite();
+	Player.width = 50;
+	Player.height = 50;
+	Player.y = PY;
+	Player.x = PX;
+
 }
 
+
 function draw() {
-	clear();
+clear();
 }
