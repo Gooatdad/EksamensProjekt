@@ -13,6 +13,7 @@ function setup() {
 	floor.w = 400;
 	floor.h = 5;
 	floor.collider = 'static';
+  //Test test
 }
 
 function draw() {
