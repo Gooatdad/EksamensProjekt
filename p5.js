@@ -1,7 +1,7 @@
 let ball, floor;
 
 function setup() {
-	new Canvas(238, 200);
+	createCanvas(400, 400);
 	world.gravity.y = 10;
 
 	ball = new Sprite();
@@ -10,7 +10,7 @@ function setup() {
 
 	floor = new Sprite();
 	floor.y = 190;
-	floor.w = 238;
+	floor.w = 400;
 	floor.h = 5;
 	floor.collider = 'static';
 }
