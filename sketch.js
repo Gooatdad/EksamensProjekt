@@ -10,9 +10,9 @@ function setup() {
 	ball.y = 30;
 
 	floor = new Sprite();
-	floor.y = 190;
-	floor.x = 100;
-	floor.w = 200;
+	floor.y = 500;
+	floor.x = 500;
+	floor.w = 1000;
 	floor.h = 5;
 	floor.collider = 'static';
 }
