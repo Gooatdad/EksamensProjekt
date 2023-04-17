@@ -1,13 +1,16 @@
-let ball;
+let player;
 let floor;
 
 function setup() {
 	new Canvas(windowWidth, windowHeight);
 	world.gravity.y = 10;
 
-	ball = new Sprite();
-	ball.diameter = 50;
-	ball.y = 30;
+	player = new Sprite();
+	player.y = 30;
+	player.x = 100;
+	player.w = 30;
+	player.h = 50;
+
 
 	floor = new Sprite();
 	floor.y = 500;
@@ -20,7 +23,7 @@ function setup() {
 function draw() {
 	background(0);
 
-	ball.draw();
+	player.draw();
 	floor.draw();
 }
 
