@@ -1,7 +1,7 @@
 let playerX = 30;
 let playerY = 30;
 let tAcc = 0.5;
-let tAccM = 0.1;
+let tAccM = 0.2;
 let dx = 4;
 let platforms = [];
 
@@ -11,27 +11,32 @@ function setup() {
 }
 
 function draw() {
+  // Calculate camera position
+  const camX = Math.max(0, Math.min(playerX - canvas.width / 2, 1000 - canvas.width));
+  const camY = Math.max(0, Math.min(playerY - canvas.height / 2, 1000 - canvas.height));
+
   background(100);
 
   // Draw ground
   fill(51);
-  rect(0 , 700, canvas.width, 200);
-	
+  rect(0 - camX, 700 - camY, canvas.width, 200);
+
   // Draw player
   fill(0, 255, 0);
-  rect(playerX, playerY, 50, 80);
-	
+  rect(playerX - camX, playerY - camY, 50, 80);
+
   if (keyIsDown(LEFT_ARROW)){
     playerX -= dx;
   }
-  
   if (keyIsDown(RIGHT_ARROW)){
     playerX += dx;
   }
 
   if(keyIsDown(UP_ARROW)){
-	tAcc = -5;
-	}
+    tAcc = -5;
+    }
+
+
 
   // Check for platform collisions
   for (let i = 0; i < platforms.length; i++) {
@@ -46,7 +51,7 @@ function draw() {
       tAcc += tAccM;
     }
   }
-  
+
   // Apply gravity
   if (playerY + 80 > 700){
     playerY = 700 - 80;
@@ -54,11 +59,11 @@ function draw() {
   } else {
     playerY += tAcc;
   }
-  
+
   // Draw platforms
   fill(255, 0, 0);
   for (let i = 0; i < platforms.length; i++) {
-    rect(platforms[i].x, platforms[i].y, platforms[i].width, platforms[i].height);
+    rect(platforms[i].x - camX, platforms[i].y - camY, platforms[i].width, platforms[i].height);
   }
 }
 
