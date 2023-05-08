@@ -1,29 +1,83 @@
-let player;
-let floor;
+let playerX = 30;
+let playerY = 30;
+let tAcc = 0.5;
+let tAccM = 0.2;
+let dx = 4;
+let platforms = [];
 
 function setup() {
-	new Canvas(windowWidth, windowHeight);
-	world.gravity.y = 10;
-
-	player = new Sprite();
-	player.y = 30;
-	player.x = 100;
-	player.w = 30;
-	player.h = 50;
-
-
-	floor = new Sprite();
-	floor.y = 500;
-	floor.x = 500;
-	floor.w = 1000;
-	floor.h = 5;
-	floor.collider = 'static';
+  createCanvas(innerWidth, innerHeight);
+  generatePlatforms();
 }
 
 function draw() {
-	background(0);
+  // Calculate camera position
+  const camX = Math.max(0, Math.min(playerX - canvas.width / 2, 1000 - canvas.width));
+  const camY = Math.max(0, Math.min(playerY - canvas.height / 2, 1000 - canvas.height));
 
-	player.draw();
-	floor.draw();
+  background(100);
+
+  // Draw ground
+  fill(51);
+  rect(0 - camX, 700 - camY, canvas.width, 200);
+
+  // Draw player
+  fill(0, 255, 0);
+  rect(playerX - camX, playerY - camY, 50, 80);
+
+  if (keyIsDown(LEFT_ARROW)){
+    playerX -= dx;
+  }
+  if (keyIsDown(RIGHT_ARROW)){
+    playerX += dx;
+  }
+
+  if(keyIsDown(UP_ARROW)){
+    tAcc = -5;
+    }
+
+
+
+  // Check for platform collisions
+  for (let i = 0; i < platforms.length; i++) {
+    if (playerX + 50 > platforms[i].x && playerX < platforms[i].x + platforms[i].width &&
+        playerY + 80 > platforms[i].y && playerY < platforms[i].y + platforms[i].height) {
+      // Player is colliding with a platform, stop falling
+      playerY = platforms[i].y - 80;
+      tAcc = 0;
+      break;
+    } else {
+      // Player is not colliding with any platforms, keep falling
+      tAcc += tAccM;
+    }
+  }
+
+  // Apply gravity
+  if (playerY + 80 > 700){
+    playerY = 700 - 80;
+    tAcc = 0;
+  } else {
+    playerY += tAcc;
+  }
+
+  // Draw platforms
+  fill(255, 0, 0);
+  for (let i = 0; i < platforms.length; i++) {
+    rect(platforms[i].x - camX, platforms[i].y - camY, platforms[i].width, platforms[i].height);
+  }
 }
 
+function generatePlatforms() {
+  // Generate 10 random platforms
+  let x = 0;
+  while (platforms.length < 10) {
+    const platform = {
+      x: x,
+      y: Math.floor(Math.random() * 250) + 200, // Ensure platforms are within 250px of each other on y-axis
+      width: Math.floor(Math.random() * 200) + 50,
+      height: 20
+    };
+    x += platform.width + 100; // Ensure platforms are at least 100px apart on x-axis
+    platforms.push(platform);
+  }
+}
