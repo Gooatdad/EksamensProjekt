@@ -1,69 +1,98 @@
 let playerX = 30;
 let playerY = 30;
 let tAcc = 0.5;
-let tAccM = 0.2;
+let tAccM = 0.1;
 let dx = 4;
 let platforms = [];
 
 function setup() {
-  createCanvas(innerWidth, innerHeight);
+  createCanvas(windowWidth, windowHeight);
   generatePlatforms();
 }
 
 function draw() {
-  // Calculate camera position
-  const camX = Math.max(0, Math.min(playerX - canvas.width / 2, 1000 - canvas.width));
-  const camY = Math.max(0, Math.min(playerY - canvas.height / 2, 1000 - canvas.height));
-
   background(100);
 
   // Draw ground
-  fill(51);
-  rect(0 - camX, 700 - camY, canvas.width, 200);
+  fill(255, 0, 0);
+  rect(0, windowHeight - 200, windowWidth, 200);
 
   // Draw player
-  fill(0, 255, 0);
-  rect(playerX - camX, playerY - camY, 50, 80);
+  fill(150, 150, 0);
+  rect(playerX, playerY, 50, 80);
 
-  if (keyIsDown(LEFT_ARROW)){
+  // Allow player to move left or right
+  if (keyIsDown(LEFT_ARROW)) {
     playerX -= dx;
   }
-  if (keyIsDown(RIGHT_ARROW)){
+  if (keyIsDown(RIGHT_ARROW)) {
     playerX += dx;
   }
 
-  if(keyIsDown(UP_ARROW)){
-    tAcc = -5;
-    }
-
-
-
-  // Check for platform collisions
+  // Allow player to jump only when in contact with a platform
+  let canJump = false;
   for (let i = 0; i < platforms.length; i++) {
     if (playerX + 50 > platforms[i].x && playerX < platforms[i].x + platforms[i].width &&
-        playerY + 80 > platforms[i].y && playerY < platforms[i].y + platforms[i].height) {
+      playerY + 80 >= platforms[i].y && playerY + 80 <= platforms[i].y + tAcc) {
+      canJump = true;
+      break;
+    }
+  }
+  if (canJump && keyIsDown(UP_ARROW)) {
+    tAcc = -6;
+  } else {
+    tAcc += tAccM;
+  }
+
+  // Check for platform collisions
+  let onPlatform = false;
+  for (let i = 0; i < platforms.length; i++) {
+    if (playerX + 50 > platforms[i].x && playerX < platforms[i].x + platforms[i].width &&
+      playerY + 80 > platforms[i].y && playerY < platforms[i].y + platforms[i].height) {
       // Player is colliding with a platform, stop falling
       playerY = platforms[i].y - 80;
       tAcc = 0;
+      onPlatform = true;
       break;
-    } else {
-      // Player is not colliding with any platforms, keep falling
-      tAcc += tAccM;
     }
   }
 
-  // Apply gravity
-  if (playerY + 80 > 700){
-    playerY = 700 - 80;
+  // Apply gravity if not on a platform
+  if (!onPlatform) {
+    tAcc += tAccM;
+  }
+
+  // Prevent player from falling through the ground
+  if (playerY + 80 > windowHeight - 200) {
+    playerY = windowHeight - 200 - 80;
     tAcc = 0;
   } else {
     playerY += tAcc;
   }
 
   // Draw platforms
-  fill(255, 0, 0);
+  fill(200);
   for (let i = 0; i < platforms.length; i++) {
-    rect(platforms[i].x - camX, platforms[i].y - camY, platforms[i].width, platforms[i].height);
+    rect(platforms[i].x, platforms[i].y, platforms[i].width, platforms[i].height);
+  }
+
+  function regeneratePlatforms() {
+    platforms = []; // Remove all existing platforms
+    generatePlatforms(); // Generate new platforms
+  }
+
+  // Restart game if player touches the ground
+if (playerY + 80 > windowHeight - 200) {
+   playerY = 30;
+   playerX = 30;
+   tAcc = 0.5;
+  }
+
+  if (playerX >= windowWidth - 50) {
+    regeneratePlatforms();
+    playerX = 30; // Reset player position
+    playerY = 30;
+    tAcc = 0.5;
   }
 }
 
@@ -73,11 +102,11 @@ function generatePlatforms() {
   while (platforms.length < 10) {
     const platform = {
       x: x,
-      y: Math.floor(Math.random() * 250) + 200, // Ensure platforms are within 250px of each other on y-axis
+      y: Math.floor(Math.random() * 120) + 200, // Ensure platforms are within 120px of each other on y-axis
       width: Math.floor(Math.random() * 200) + 50,
       height: 20
     };
-    x += platform.width + 100; // Ensure platforms are at least 100px apart on x-axis
+    x += platform.width + 200; // Ensure platforms are at least 200px apart on x-axis
     platforms.push(platform);
   }
 }
