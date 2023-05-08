@@ -4,6 +4,7 @@ let tAcc = 0.5;
 let tAccM = 0.1;
 let dx = 4;
 let platforms = [];
+let score = 0;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -38,6 +39,7 @@ function draw() {
       break;
     }
   }
+
   if (canJump && keyIsDown(UP_ARROW)) {
     tAcc = -6;
   } else {
@@ -81,11 +83,12 @@ function draw() {
     generatePlatforms(); // Generate new platforms
   }
 
-  // Restart game if player touches the ground
+  // Restart game and points if player touches the ground
 if (playerY + 80 > windowHeight - 200) {
    playerY = 30;
    playerX = 30;
    tAcc = 0.5;
+   score = 0;
   }
 
   if (playerX >= windowWidth - 50) {
@@ -93,7 +96,10 @@ if (playerY + 80 > windowHeight - 200) {
     playerX = 30; // Reset player position
     playerY = 30;
     tAcc = 0.5;
+    score ++; // Increase score by 1
   }
+textSize(64);
+text (score, 10, 64);
 }
 
 function generatePlatforms() {
